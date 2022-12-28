@@ -1,0 +1,669 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+	  body {
+		  margin: 0px;
+		  margin-bottom: 2px;
+		  background-color: #333;
+		  color: #fff;
+		  display: flex;
+		  flex-direction: column;
+	  }
+	  
+	  .easing-image-selected {
+	    outline: 1px solid white;
+	  }
+	  
+	  #settings-menu {
+	  	
+	  }
+	  
+	  #breathing-display {
+	    display: flex;
+	    height: 100vh;
+	    align-items: center;
+	    justify-content: center;
+		flex-direction: column;
+	  }
+	  
+	  #settings-display {
+  	  	display: flex;
+  		flex-direction: column;
+		flex-wrap: wrap;
+		position:absolute;
+		bottom: 0;
+		background-color: black;
+		opacity: 0.6;
+		z-index: 100;
+		width: 100%;
+
+	  }
+	  
+	  #settings-menu h2 {
+		  font-size: 2em;
+		  font-weight: 700;
+	  }
+	  
+	  .settings-menu-opened {
+		  height: 30px;
+	  }
+	  
+	  .settings-menu-closed {
+	  	  height: 80px;
+	  }
+	  
+	  .control-section {
+    	display: flex;
+    	flex-direction: column;
+		align-items: center;
+		padding: 3px;
+		justify-content: center;
+		width: 100%;
+	  }
+	  
+	  #controls {
+	    display: flex;
+		flex-direction: column;
+		width: 100%;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		display: none;
+		padding-bottom: 20px;
+		padding-top: 0px;
+	  }
+	  
+	  .control-contents {
+  	    display: flex;
+  		flex-direction: row;
+  		align-items: center;
+  		justify-content: center;
+		width: 100%;
+	  }
+	  
+
+	  
+	  .circle-holder {
+	    width: 100%; /* Set the width of the circle holder */
+	    display: flex; /* Make the circle holder a flex container */
+	    justify-content: center; /* Center the circle element horizontally */
+	    align-items: center; /* Center the circle element vertically */
+	    position: relative; /* Set the position of the circle holder to relative */
+	    /* border: 1px solid #000;
+		margin: auto; /* Center the circle holder within the right pane */
+	  }
+	  
+
+	  
+	  /* Use a different color for h2 headings */
+	  h2 {
+		  padding: 0px;
+		  margin-bottom: 1px;
+		  margin-top: 1px;
+  	      font-family: "Roboto", sans-serif;
+  	      font-size: 1em;
+		  text-align: center;
+		  font-weight: 300;
+	  }
+	  
+	  label,select {
+  	      font-family: "Roboto", sans-serif;
+  	      font-size: 1em;
+	  }
+	  
+	  .easing-images {
+		width: 100%;
+		background-color: #333333db;
+		display: block;
+	  }
+	  
+	  .easing-images-row {
+	    width: 100%;  /* set width to 100% to span the full width of the parent element */
+	    display: flex;  /* change display to flex to enable the use of justify-content */
+		flex-direction: row;
+		margin: auto;
+	  }
+	  
+	  .easing-image {
+		background-color: #f8e1e1;
+		min-height: 30px;	
+		min-width: 30px;
+		border-radius: 3px;
+		margin: 2px;
+		float: left;
+		white-space: nowrap;  /* prevent the element from wrapping to a new line */
+	  }
+	  
+	  .all-circles {
+		  width: 700px;
+		  height: 700px;
+		  border-radius: 50%;
+		  border: 0.5px solid white;
+	  }
+	  
+	  @media (orientation: landscape)  {
+	    .easing-image {
+	      min-height: 5vw;
+	      min-width: 5vw;
+	    }
+		
+	  }
+
+	  @media (orientation: portrait) {
+	    .easing-image {
+	      min-height:12vw;
+	      min-width: 12vw;
+	    }
+		#controls {
+			min-height: 25vh;
+		}
+  	    .all-circles {
+  		  width: 100px;
+  		  height: 100px;
+  		  border-radius: 50%;
+  		  border: 0.5px solid white;
+  	    }
+	  }
+	  
+	  .easing-image-selected {
+		  border: 1px solid teal;
+		  box-shadow: 0 0 3px teal;
+	  }
+	  
+	  .easing-image:hover {
+	    background-color: #808080eb	;  /* change the background color when the element is hovered over */
+	  }
+	  
+
+	  
+	  #pulse-circle {
+		box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+		position: absolute;
+		background: radial-gradient(circle, rgba(0,128,128,1) 24%, rgba(4,48,57,1) 93%);
+		opacity: 0.2;
+		z-index: 2;
+	  }
+	  
+	  
+	  #circle {
+		background-image: linear-gradient(166deg, #ffffff 10%, #5F5370 10%, #5F5370 50%, #ffffff 50%, #ffffff 60%, #5F5370 60%, #5F5370 100%);
+		background-size: 20.67px 5.15px;
+		/*transform-origin: 200px 200px; */
+		transform: rotate(0deg);
+		opacity: 0.6;
+		z-index: 15;
+	  }
+	  
+	  #empty-circle {
+	    position: absolute;
+		background-image: linear-gradient(166deg, #ffffff 10%, #5F5370 10%, #5F5370 50%, #ffffff 50%, #ffffff 60%, #5F5370 60%, #5F5370 100%);
+		background-size: 20.67px 5.15px;
+	    border: 2px solid #fff; /* Set the border color to white */
+		opacity: 0.1;
+	  }
+	  
+	  .hidden {
+	  	visibility: hidden;
+		display: none;
+	  }
+	  
+	  select {
+	    appearance: none;
+	    border-radius: 8px;
+	    background-color: #f0f0f0;
+	    color: #333;
+	    padding: 10px;
+	    border: none;
+		margin-left: 10px;
+	  }
+	  
+
+	  
+	  #message {
+	    position: absolute;
+		z-index: 40;
+		opacity: 0.5;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	    text-align: center;
+	    font-size: 2.5em; /* larger font size */
+	    font-family: Arial, sans-serif; /* modern font */
+	    color: white; /* darker text color */
+	  }
+	  
+	  .form-field-row {
+	    display: flex;
+		flex-direction: row;
+	  }
+	  
+	  .easing-selectors {
+		  
+	  }
+	  
+  </style>
+</head>
+<body>
+	<div id="breathing-display">
+	  <div class="circle-holder">
+		  <div id="message"></div>
+		  <div class="empty-circle all-circles" id='empty-circle'></div>
+		  <div class="circle all-circles" id="circle"></div>
+		  <div class="all-circles" id="pulse-circle"></div>
+	  </div>
+	</div>
+	<div id="settings-display">
+	  <div id="settings-menu" class="settings-menu-closed">
+		  <h2>- - -</h2>
+	  </div>
+	  <div id="controls">
+		<div class="control-section">
+			<div class="control-header"><h2>Inhale shape, duration, and hold</h2></div>
+			<div class="control-contents">
+				<div id="inhale-easing-selection">
+					<div class="easing-images-row"></div>
+					<select class="hidden" id="inhale-easing-select">
+					</select>
+				</div>
+				<div class="form-field-row">
+				    <select id="inhale-animation-speed">
+				    </select>
+				</div>
+				<div class="form-field-row">
+				    <select id="inhale-hold-duration">
+				    </select>
+			    </div>
+			</div>
+	    </div>
+		<div class="control-section">
+			<div class="control-header"><h2>Exhale shape, duration, and hold</h2></div>
+			<div class="control-contents">
+				<div id="exhale-easing-selection">
+					<div class="easing-images-row"></div>
+					<select class="hidden" id="exhale-easing-select">
+					</select>
+				</div>
+				<div class="form-field-row">
+				    <select id="exhale-animation-speed">
+				    </select>
+				</div>
+	            <div class="form-field-row">
+				    <select id="exhale-hold-duration">
+				    </select>
+		       </div>
+			</div>
+		</div>
+		
+	  </div>
+	</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+	  // script.js
+	  let exhaleAnimationSpeed;
+	  let inhaleAnimationSpeed;
+	  let exhaleHoldDuration;
+	  let inhaleHoldDuration;
+	  let exhaleEasingSelect;
+	  let inhaleEasingSelect;	  
+	  
+	  $(document).ready(function() {
+		const timingOptions = {
+	          500:"0.5s",
+		      1000:"1s",
+		      2000:"2s",
+		      2500:"2.5s",
+		      3000:"3s",
+		      3500:"3.5s",
+		      4000:"4s",
+		      4500:"4.5s",
+		      5000:"5s",
+		      5500:"5.5s",
+		      6000:"6s",
+		      6500:"6.5s",
+		      7000:"7s",
+		      7500:"7.5s",
+		      8000:"8s" 	
+		}
+		
+		const easingOptions = [
+		    'swing',
+		    'easeOutQuad',
+		    'easeInOutQuad',
+		    'easeOutCubic',
+		    'easeInOutCubic',
+			'easeInOutQuart',
+		];
+		
+	    const easingSVGs = {
+		    swing: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_6.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_6.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m296.54855 391.46457c11.597992 -4.7445374 45.337708 -10.411194 69.58792 -28.467194c24.250214 -18.056 49.422577 -50.082672 75.91339 -79.868774c26.490814 -29.786087 61.680237 -75.388 83.031494 -98.84776c21.351257 -23.459747 28.865295 -31.103668 45.07611 -41.910767c16.210876 -10.807083 43.490845 -19.109795 52.188965 -22.931747" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m296.54855 391.46457c11.597992 -4.7445374 45.337708 -10.411194 69.58792 -28.467194c24.250214 -18.056 49.422577 -50.082672 75.91339 -79.868774c26.490814 -29.786087 61.680237 -75.388 83.031494 -98.84776c21.351257 -23.459747 28.865295 -31.103668 45.07611 -41.910767c16.210876 -10.807083 43.490845 -19.109795 52.188965 -22.931747" fill-rule="evenodd"/></g></svg>', 
+		    easeOutQuad: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_20.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_20.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m307.61942 389.09186c11.070862 -15.288269 45.206055 -64.58005 66.4252 -91.729645c21.219177 -27.149628 40.329834 -50.080933 60.88977 -71.167984c20.559937 -21.087051 40.328094 -39.933945 62.46982 -55.35434c22.141754 -15.42038 47.447968 -28.205597 70.380585 -37.16797c22.932617 -8.962387 56.012695 -13.838585 67.21521 -16.6063" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m307.61942 389.09186c11.070862 -15.288269 45.206055 -64.58005 66.4252 -91.729645c21.219177 -27.149628 40.329834 -50.080933 60.88977 -71.167984c20.559937 -21.087051 40.328094 -39.933945 62.46982 -55.35434c22.141754 -15.42038 47.447968 -28.205597 70.380585 -37.16797c22.932617 -8.962387 56.012695 -13.838585 67.21521 -16.6063" fill-rule="evenodd"/></g></svg>',
+		    easeInOutQuad: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_27.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_27.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m299.71127 392.2546c7.907715 -2.10849 31.630798 -5.270355 47.446198 -12.65094c15.815399 -7.3805847 31.630798 -17.266846 47.446198 -31.632538c15.815399 -14.365692 31.367035 -32.8154 47.446198 -54.561676c16.079193 -21.746277 33.872284 -55.487762 49.02887 -75.916016c15.156616 -20.428253 27.281311 -32.947067 41.910767 -46.65355c14.629456 -13.706467 29.786987 -26.754593 45.86615 -35.585297c16.079163 -8.830711 42.174072 -14.499123 50.608887 -17.398949" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m299.71127 392.2546c7.907715 -2.10849 31.630798 -5.270355 47.446198 -12.65094c15.815399 -7.3805847 31.630798 -17.266846 47.446198 -31.632538c15.815399 -14.365692 31.367035 -32.8154 47.446198 -54.561676c16.079193 -21.746277 33.872284 -55.487762 49.02887 -75.916016c15.156616 -20.428253 27.281311 -32.947067 41.910767 -46.65355c14.629456 -13.706467 29.786987 -26.754593 45.86615 -35.585297c16.079163 -8.830711 42.174072 -14.499123 50.608887 -17.398949" fill-rule="evenodd"/></g></svg>',
+		    easeOutCubic: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_41.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_41.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m289.01312 403.04462c6.1666565 -12.5 25.0 -52.166656 37.0 -75.0c12.0 -22.833344 22.5 -42.833344 35.0 -62.0c12.5 -19.166656 25.0 -37.33333 40.0 -53.0c15.0 -15.6666565 33.5 -30.166656 50.0 -41.0c16.5 -10.833328 31.833344 -17.5 49.0 -24.0c17.166687 -6.5 33.833313 -11.833328 54.0 -15.0c20.166687 -3.1666565 55.833313 -3.3333282 67.0 -4.0" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m289.01312 403.04462c6.1666565 -12.5 25.0 -52.166656 37.0 -75.0c12.0 -22.833344 22.5 -42.833344 35.0 -62.0c12.5 -19.166656 25.0 -37.33333 40.0 -53.0c15.0 -15.6666565 33.5 -30.166656 50.0 -41.0c16.5 -10.833328 31.833344 -17.5 49.0 -24.0c17.166687 -6.5 33.833313 -11.833328 54.0 -15.0c20.166687 -3.1666565 55.833313 -3.3333282 67.0 -4.0" fill-rule="evenodd"/></g></svg>',
+		    easeInOutCubic: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_48.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_48.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m311.01312 402.04462c9.1666565 -1.0 38.5 -1.6666565 55.0 -6.0c16.5 -4.3333435 32.333344 -12.0 44.0 -20.0c11.6666565 -8.0 15.0 -10.3333435 26.0 -28.0c11.0 -17.666656 28.0 -54.5 40.0 -78.0c12.0 -23.5 20.166656 -44.5 32.0 -63.0c11.833313 -18.5 26.5 -36.5 39.0 -48.0c12.5 -11.5 25.166687 -16.666656 36.0 -21.0c10.833313 -4.3333282 18.833313 -3.8333282 29.0 -5.0c10.166687 -1.1666565 26.666687 -1.6666565 32.0 -2.0" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m311.01312 402.04462c9.1666565 -1.0 38.5 -1.6666565 55.0 -6.0c16.5 -4.3333435 32.333344 -12.0 44.0 -20.0c11.6666565 -8.0 15.0 -10.3333435 26.0 -28.0c11.0 -17.666656 28.0 -54.5 40.0 -78.0c12.0 -23.5 20.166656 -44.5 32.0 -63.0c11.833313 -18.5 26.5 -36.5 39.0 -48.0c12.5 -11.5 25.166687 -16.666656 36.0 -21.0c10.833313 -4.3333282 18.833313 -3.8333282 29.0 -5.0c10.166687 -1.1666565 26.666687 -1.6666565 32.0 -2.0" fill-rule="evenodd"/></g></svg>',
+			easeInOutQuart: '<svg version="1.1" viewBox="0.0 0.0 960.0 540.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="g1c18af7d457_0_62.0"><path d="m0 0l960.0 0l0 540.0l-960.0 0l0 -540.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#g1c18af7d457_0_62.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 540.0l-960.0 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m314.01312 410.04495c7.8333435 -0.1666565 31.166656 1.6666565 47.0 -1.0c15.8333435 -2.6666565 34.833344 -7.5 48.0 -15.0c13.1666565 -7.5 20.166656 -13.6666565 31.0 -30.0c10.8333435 -16.333344 24.666656 -45.166656 34.0 -68.0c9.3333435 -22.833344 12.5 -47.833344 22.0 -69.0c9.5 -21.166672 23.0 -44.16667 35.0 -58.0c12.0 -13.8333435 24.666687 -19.5 37.0 -25.0c12.333313 -5.5 24.833313 -6.5 37.0 -8.0c12.166687 -1.5 30.0 -0.8333435 36.0 -1.0" fill-rule="evenodd"/><path stroke="#595959" stroke-width="12.0" stroke-linejoin="round" stroke-linecap="butt" d="m314.01312 410.04495c7.8333435 -0.1666565 31.166656 1.6666565 47.0 -1.0c15.8333435 -2.6666565 34.833344 -7.5 48.0 -15.0c13.1666565 -7.5 20.166656 -13.6666565 31.0 -30.0c10.8333435 -16.333344 24.666656 -45.166656 34.0 -68.0c9.3333435 -22.833344 12.5 -47.833344 22.0 -69.0c9.5 -21.166672 23.0 -44.16667 35.0 -58.0c12.0 -13.8333435 24.666687 -19.5 37.0 -25.0c12.333313 -5.5 24.833313 -6.5 37.0 -8.0c12.166687 -1.5 30.0 -0.8333435 36.0 -1.0" fill-rule="evenodd"/></g></svg>'
+		};
+
+		// this function pooulates the easing selection options
+		function populateSelect(easingOptions, targetElement) {
+		  for (const easing of easingOptions) {
+		    const optionElement = document.createElement('option');
+		    optionElement.value = easing;
+		    optionElement.textContent = easing;
+		    targetElement.appendChild(optionElement);
+		  }
+		}
+
+		const exhaleSelectElement = document.getElementById('exhale-easing-select');
+		populateSelect(easingOptions, exhaleSelectElement);
+		
+		const inhaleSelectElement = document.getElementById('inhale-easing-select');
+		populateSelect(easingOptions, inhaleSelectElement);
+		
+		
+		// this adds a selection box around the image
+		function selectEasingImage(div) {
+		  // Clear the easing-image-selected class from all siblings
+		  div.siblings().removeClass('easing-image-selected');
+
+		  // Add the easing-image-selected class to the current div
+		  div.addClass('easing-image-selected');
+		}
+		
+		// Iterate over the select elements with "speed" or "duration" in the id
+		$('select[id*="speed"], select[id*="duration"]').each(function() {
+		  // Get the current select element
+		  const select = $(this);
+
+		  // Iterate over the key-value pairs in the timingOptions object
+		  for (const key in timingOptions) {
+		    // Create an option element
+		    const option = $('<option>')
+		      // Set the value to the key
+		      .val(key)
+		      // Set the content to the value
+		      .text(timingOptions[key]);
+
+		    // Append the option element to the select element
+		    select.append(option);
+		  }
+		});
+		
+		
+		$('#settings-display').click(function(event) {
+		  if (!$(event.target).is('select') && !$(event.target).is('path')) {
+		    $('#controls').toggle();
+		    if ($('#settings-menu').hasClass('settings-menu-opened')) {
+		      $('#settings-menu').removeClass('settings-menu-opened').addClass('settings-menu-closed');
+		    } else {
+		      $('#settings-menu').removeClass('settings-menu-closed').addClass('settings-menu-opened');
+		    }
+		  }
+		});
+		
+		// this function creates the easing images used to change the type of breath
+		function createEasingImages(div, breathingDirection) {
+		  // Iterate through the key-value pairs in the easingSVGs object
+		  for (const key in easingSVGs) {
+		    // Create a div element with the class easing-image and two data- attributes
+		    const easingDiv = $('<div>').addClass('easing-image')
+		      .attr('data-easing-mode', key)
+		      .attr('data-breathing-direction', breathingDirection);
+
+		    // Attach an onclick handler to the div element
+		    easingDiv.on('click', function() {
+		      // Get the value of the data-breathing-direction attribute
+		      const dir = $(this).attr('data-breathing-direction');
+		      const easingMode = $(this).attr('data-easing-mode');
+			  selectEasingImage($(this))
+		      if (dir === 'exhale') {
+		        // Update the exhale-easing-select element
+		        $('#exhale-easing-select').val(easingMode);
+		      } else if (dir === 'inhale') {
+		        // Update the inhale-easing-select element
+		        $('#inhale-easing-select').val(easingMode);
+		      }
+		    });
+
+		    // Set the inner HTML of the div element to the SVG string
+		    //easingDiv.html(easingSVGs[key]);
+			
+			
+			easingDiv.html(easingSVGs[key]).promise().done(function() {
+			  // Get the SVG element inside the div element
+			  const svg = easingDiv.find('svg');
+			  
+			  svg.removeAttr('viewBox')
+			  // Set the viewBox property of the SVG element
+			  svg.attr('viewBox', '260.0 70.0 400.0 375.0');
+			  
+			  // Get the value of the data-breathing-direction attribute
+			  const breathingDirection = easingDiv.attr('data-breathing-direction');
+
+			  // Apply the appropriate transformation based on the value of the data-breathing-direction attribute
+			  if (breathingDirection === 'exhale') {
+			    svg.attr('transform', 'scale(1, -1)');
+			  }
+			});
+			
+			// Append the div element to the exhale-easing-selection div
+			div.find('.easing-images-row').append(easingDiv);
+		  }
+		}
+		
+		// To create easing images for the exhale direction, you can call the function like this:
+		createEasingImages($('#exhale-easing-selection'), 'exhale');
+
+		// To create easing images for the inhale direction, you can call the function like this:
+		createEasingImages($('#inhale-easing-selection'), 'inhale');
+		
+		
+		const defaultValues = {
+			exhaleAnimationSpeed: '4000',
+			inhaleAnimationSpeed: '6000',
+			exhaleHoldDuration: '2000',
+			inhaleHoldDuration: '2000',
+			exhaleEasingSelect: 'easeOutQuad',
+			inhaleEasingSelect: 'swing'
+		};
+
+		// Set the default values for the select elements
+		$('#exhale-animation-speed').val(defaultValues.exhaleAnimationSpeed);
+		$('#inhale-animation-speed').val(defaultValues.inhaleAnimationSpeed);
+		$('#exhale-hold-duration').val(defaultValues.exhaleHoldDuration);
+		$('#inhale-hold-duration').val(defaultValues.inhaleHoldDuration);
+		$('#exhale-easing-select').val(defaultValues.exhaleEasingSelect);
+		$('#inhale-easing-select').val(defaultValues.inhaleEasingSelect);
+		
+		
+
+		exhaleAnimationSpeed = parseInt($('#exhale-animation-speed').val(), 10);
+		inhaleAnimationSpeed = parseInt($('#inhale-animation-speed').val(), 10);
+		exhaleHoldDuration = parseInt($('#exhale-hold-duration').val(), 10);
+		inhaleHoldDuration = parseInt($('#inhale-hold-duration').val(), 10);
+		exhaleEasingSelect = $('#exhale-easing-select').val();
+		inhaleEasingSelect = $('#inhale-easing-select').val();
+		
+	    selectedDiv = $('div.easing-image[data-breathing-direction="inhale"][data-easing-mode="' + inhaleEasingSelect + '"]');
+
+	    // Add the "easing-image-selected" class to the selected div
+	    selectedDiv.addClass('easing-image-selected');
+		
+	    selectedDiv = $('div.easing-image[data-breathing-direction="exhale"][data-easing-mode="' + exhaleEasingSelect + '"]');
+
+	    // Add the "easing-image-selected" class to the selected div
+	    selectedDiv.addClass('easing-image-selected');
+
+		//start by shrinking the circle
+	    shrinkCircle();
+
+	    // Update the value of animationSpeed when the value in the select box changes
+	    $('#exhale-animation-speed').on('change', function() {
+	      // Get the new value of animationSpeed from the select box and convert it to a number
+	      exhaleAnimationSpeed = parseInt($(this).val(), 10);
+	    });
+		
+	    $('#inhale-animation-speed').on('change', function() {
+	      // Get the new value of animationSpeed from the select box and convert it to a number
+	      inhaleAnimationSpeed = parseInt($(this).val(), 10);
+	    });
+		
+	    $('#exhale-hold-duration').on('change', function() {
+	      // Get the new value of animationSpeed from the select box and convert it to a number
+	      exhaleHoldDuration = parseInt($(this).val(), 10);
+	    });
+		
+	    $('#inhale-hold-duration').on('change', function() {
+	      // Get the new value of animationSpeed from the select box and convert it to a number
+	      inhaleHoldDuration = parseInt($(this).val(), 10);
+	    });
+	  });
+
+
+
+		function shrinkCircle() {		
+			// Calculate the new radius by dividing the current radius by 2
+			const currentRadius = $('#circle').css('width').slice(0, -2);
+			const newRadius = currentRadius / 3;
+
+			// Get the selected easing function from the select box
+			const easing = $('#exhale-easing-select').val();
+			
+		    $('#pulse-circle').css({
+		      visibility: 'visible',
+		      width: newRadius,
+		      height: newRadius
+		    });
+
+			// Update the message to display "exhale"
+			$('#message').animate({
+				opacity: 0.4
+			    }, 200, function() {
+			      // update the text
+			      $(this).text('Exhale');
+			      // animate the element back in
+			      $(this).animate({
+				  opacity: 0.6
+			    }, 200);
+			});
+			
+			console.log('about to shrink in '+exhaleAnimationSpeed+'using '+easing)
+
+			// Animate the circle to the new radius and change its color slightly using jQuery's animate function
+			$('#circle').animate({ 
+			width: newRadius, 
+			height: newRadius,
+			}, {
+			duration: exhaleAnimationSpeed,
+			  step: function(now, fx) {
+				  a = fx.prop
+				  if (a == 'height') {
+					  $(this).css('transform', 'rotate('+(fx.pos * 720 * -1)+'deg)');
+				  }
+			  },
+			easing: easing,
+			complete: exhaleHold
+			});
+			
+			$('#pulse-circle').animate({ 
+			width: currentRadius, 
+			height: currentRadius,
+			}, {
+			duration: exhaleAnimationSpeed,
+			easing: easing
+			});
+			
+
+
+		}
+
+		function exhaleHold() {
+  
+		// Update the message to display "exhale"
+		  $('#message').animate({
+			  opacity: 0.4
+		  }, 100, function() {
+		    // update the text
+		    $(this).text('Wait...');
+		    // animate the element back in
+		    $(this).animate({
+				opacity: 0.5
+		    }, 100);
+		  });
+  
+		setTimeout(growCircle, exhaleHoldDuration);
+		}
+	  
+		function inhaleHold() {
+  
+		// Update the message to display "exhale"
+		  $('#message').animate({
+			  opacity: 0.4
+		  }, 100, function() {
+		    // update the text
+		    $(this).text('Hold it...');
+		    // animate the element back in
+		    $(this).animate({
+				opacity: 0.5
+		    }, 100);
+		  });
+
+		setTimeout(shrinkCircle, inhaleHoldDuration);
+		}
+
+		function growCircle() {
+			// Get the selected easing function from the select box
+			const easing = $('#inhale-easing-select').val();
+			
+			const currentRadius = $('#circle').css('width').slice(0, -2);
+			const newRadius = currentRadius*3;
+
+
+			// Update the message to display "inhale"
+			$('#message').animate({
+				opacity: 0.4
+			}, 200, function() {
+			  // update the text
+			  $(this).text('Inhale');
+			  // animate the element back in
+			  $(this).animate({
+			    opacity: 0.6
+			  }, 200);
+			});
+
+			// Animate the circle back to its original size and color using jQuery's animate function
+			$('#circle').animate({ 
+			  width: newRadius, 
+			  height: newRadius,
+			  opacity: '0.8',
+			}, {
+			  duration: inhaleAnimationSpeed,
+			  step: function(now, fx) {
+				  a = fx.prop
+				  if (a == 'height') {
+					  //console.log(fx.pos);
+					  $(this).css('transform', 'rotate('+(fx.pos * 720)+'deg)');
+				  }
+
+
+			  },
+			  easing: easing,
+			  complete: inhaleHold,
+			  //transformOrigin: 'center'
+		     });
+			 
+ 			$('#pulse-circle').animate({ 
+ 			width: currentRadius, 
+ 			height: currentRadius,
+ 			}, {
+ 			duration: inhaleAnimationSpeed,
+ 			easing: easing
+ 			});
+	  }
+  </script>
+</body>
+</html>
