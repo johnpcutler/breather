@@ -13,10 +13,6 @@
 		  flex-direction: column;
 	  }
 	  
-	  .easing-image-selected {
-	    outline: 1px solid white;
-	  }
-	  
 	  #settings-menu {
 	  	
 	  }
@@ -174,16 +170,20 @@
 	  
 	  @media only screen and (max-device-width: 480px) {
     	    .all-circles {
-    		  width: 800px;
-    		  height: 800px;
+    		  width: 700px;
+    		  height: 700px;
     		  border-radius: 50%;
     		  border: 0.5px solid white;
     	    }
+			.control-header h2, select {
+				font-size: 3em;
+			}
 	  }
 	  
 	  .easing-image-selected {
 		  border: 1px solid teal;
 		  box-shadow: 0 0 3px teal;
+		  background-color: teal;
 	  }
 	  
 	  .easing-image:hover {
@@ -196,7 +196,7 @@
 		box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 		position: absolute;
 		background: radial-gradient(circle, rgba(0,128,128,1) 24%, rgba(4,48,57,1) 93%);
-		opacity: 0.2;
+		opacity: 0.1;
 		z-index: 2;
 	  }
 	  
