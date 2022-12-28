@@ -23,6 +23,7 @@
 	    align-items: center;
 	    justify-content: center;
 		flex-direction: column;
+		z-index: 1;
 	  }
 	  
 	  #settings-display {
@@ -32,9 +33,9 @@
 		position:absolute;
 		bottom: 0;
 		background-color: black;
-		opacity: 0.6;
 		z-index: 100;
 		width: 100%;
+		opacity: 0.8;
 
 	  }
 	  
@@ -70,6 +71,8 @@
 		display: none;
 		padding-bottom: 20px;
 		padding-top: 0px;
+		z-index: 200;
+		opacity: 0.9;
 	  }
 	  
 	  .control-contents {
@@ -130,6 +133,7 @@
 		border-radius: 3px;
 		margin: 2px;
 		float: left;
+		z-index: 900;
 		white-space: nowrap;  /* prevent the element from wrapping to a new line */
 	  }
 	  
